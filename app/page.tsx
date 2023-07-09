@@ -48,7 +48,7 @@ function CompanyCard({
         <Flex gap="15px" alignItems="start" direction={"column"}>
           <Image
             src={imageSrc}
-            alt={`${companyName} logo`}
+            alt={'logo'}
             borderRadius={"lg"}
           />
           <Flex direction="column">
@@ -115,6 +115,8 @@ function ChildCompanyCard({
 function ContactForm() {
   const [data, setData] = useState({ email: "", message: "" });
 
+  const handleSubmit = () => {}
+
   return (
     <Card variant={"outline"}>
       <CardBody>
@@ -127,7 +129,7 @@ function ContactForm() {
           <FormLabel>Message</FormLabel>
           <Textarea onChange={(e) => setData({ email: data.email, message: e.target.value })} height={"xs"} />
         </FormControl>
-        <Button mt="2vh" width="100%" colorScheme="blue">
+        <Button mt="2vh" width="100%" colorScheme="blue" onClick={handleSubmit}>
           Submit
         </Button>
       </CardBody>
@@ -234,7 +236,7 @@ export default function Home() {
                 Contact
               </Heading>
               <Text mb={"2vh"}>
-                Leave a message here and I'll get back to you
+                Leave a message here and I will get back to you
               </Text>
               <Flex direction={"column"} gap={"15px"}>
                 <ContactForm/>
