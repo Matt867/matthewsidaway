@@ -21,6 +21,8 @@ import {
   FormControl,
   FormLabel,
   Input,
+  UnorderedList,
+  ListItem
 } from "@chakra-ui/react";
 
 import { FaGithub } from "react-icons/fa";
@@ -181,7 +183,7 @@ export default function Home() {
                   imageSrc="/metalogo.png"
                   duration="Oct 2022 - Present"
                   rootCard={true}
-                  description="Rotational engineering training program"
+                  description="Work-based rotational engineering training program"
                 >
                   <ChildCompanyCard
                     companyName="Workplace"
@@ -223,11 +225,12 @@ export default function Home() {
               </Heading>
               <Flex direction={"column"} gap={"15px"}>
                 <Card>
-                  <CardHeader>
-                    <Heading size={"md"}>
-                      Hmmm, nothing listed here yet...
-                    </Heading>
-                  </CardHeader>
+                  <CardBody>
+                    <UnorderedList>
+                      <ListItem><Text fontWeight='bold'>A*A*A*</Text> Mathematics, Physics, Computer Science</ListItem>
+                      <ListItem>Working towards Level 4 Software Engineering qualification with Multiverse</ListItem>
+                    </UnorderedList>
+                  </CardBody>
                 </Card>
               </Flex>
             </TabPanel>
