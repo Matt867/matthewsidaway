@@ -22,12 +22,28 @@ import {
   FormLabel,
   Input,
   UnorderedList,
-  ListItem
+  ListItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 import { FaGithub } from "react-icons/fa";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+
+import { createClient } from "@supabase/supabase-js";
+
+// Create a single supabase client for interacting with your database
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_PROJECT_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_KEY!,
+);
 
 function CompanyCard({
   companyName,
@@ -48,11 +64,7 @@ function CompanyCard({
     <Card width={"100%"} variant={rootCard ? "outline" : "filled"}>
       <CardBody>
         <Flex gap="15px" alignItems="start" direction={"column"}>
-          <Image
-            src={imageSrc}
-            alt={'logo'}
-            borderRadius={"lg"}
-          />
+          <Image src={imageSrc} alt={"logo"} borderRadius={"lg"} />
           <Flex direction="column">
             <Heading size="md">{companyName}</Heading>
             <Text>Apprentice Software Engineer</Text>
@@ -115,26 +127,70 @@ function ChildCompanyCard({
 }
 
 function ContactForm() {
-  const [data, setData] = useState({ email: "", message: "" });
+  const [formData, setFormData] = useState({ email: "", message: "" });
 
-  const handleSubmit = () => {}
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const finalRef = useRef(null);
+
+  const handleSubmit = async () => {
+
+    if (formData.email == "" || formData.message == "") {
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("messages")
+      .insert([{ email: formData.email, message: formData.message }])
+      .select();
+    onOpen();
+  };
 
   return (
     <Card variant={"outline"}>
       <CardBody>
         <FormControl isRequired>
           <FormLabel>Email address</FormLabel>
-          <Input onChange={(e) => setData({ email: e.target.value, message: data.message })} type="email" />
+          <Input
+            onChange={(e) =>
+              setFormData({ email: e.target.value, message: formData.message })
+            }
+            type="email"
+            isRequired={true}
+          />
         </FormControl>
         <Divider mt="2vh" mb="1vh" />
         <FormControl isRequired>
           <FormLabel>Message</FormLabel>
-          <Textarea onChange={(e) => setData({ email: data.email, message: e.target.value })} height={"xs"} />
+          <Textarea
+            onChange={(e) =>
+              setFormData({ email: formData.email, message: e.target.value })
+            }
+            height={"xs"}
+            isRequired={true}
+          />
         </FormControl>
-        <Button mt="2vh" width="100%" colorScheme="blue" onClick={handleSubmit}>
+        <Button
+          mt="2vh"
+          width="100%"
+          colorScheme="blue"
+          onClick={async () => await handleSubmit()}
+        >
           Submit
         </Button>
       </CardBody>
+      <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Thanks for reaching out</ModalHeader>
+          <ModalBody>I'll try to get back to you as soon as possible.</ModalBody>
+          <ModalCloseButton />
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Card>
   );
 }
@@ -227,8 +283,14 @@ export default function Home() {
                 <Card>
                   <CardBody>
                     <UnorderedList>
-                      <ListItem><Text fontWeight='bold'>A*A*A*</Text> Mathematics, Physics, Computer Science</ListItem>
-                      <ListItem>Working towards Level 4 Software Engineering qualification with Multiverse</ListItem>
+                      <ListItem>
+                        <Text fontWeight="bold">A*A*A*</Text> Mathematics,
+                        Physics, Computer Science
+                      </ListItem>
+                      <ListItem>
+                        Working towards Level 4 Software Engineering
+                        qualification with Multiverse
+                      </ListItem>
                     </UnorderedList>
                   </CardBody>
                 </Card>
@@ -242,7 +304,7 @@ export default function Home() {
                 Leave a message here and I will get back to you
               </Text>
               <Flex direction={"column"} gap={"15px"}>
-                <ContactForm/>
+                <ContactForm />
               </Flex>
             </TabPanel>
           </TabPanels>
