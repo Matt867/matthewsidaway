@@ -182,7 +182,7 @@ function ContactForm() {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Thanks for reaching out</ModalHeader>
-          <ModalBody>I'll try to get back to you as soon as possible.</ModalBody>
+          <ModalBody>I will try to get back to you as soon as possible.</ModalBody>
           <ModalCloseButton />
           <ModalFooter>
             <Button colorScheme='blue' mr={3} onClick={onClose}>
