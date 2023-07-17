@@ -127,21 +127,25 @@ function ChildCompanyCard({
 }
 
 function ContactForm() {
-  const [formData, setFormData] = useState({ email: "", message: "" });
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
 
   const handleSubmit = async () => {
 
-    if (formData.email == "" || formData.message == "") {
+    if (email == "" || message == "") {
       return;
     }
 
     const { data, error } = await supabase
       .from("messages")
-      .insert([{ email: formData.email, message: formData.message }])
+      .insert([{ email: email, message: message }])
       .select();
+    
+    setEmail("");
+    setMessage("");
     onOpen();
   };
 
@@ -152,7 +156,7 @@ function ContactForm() {
           <FormLabel>Email address</FormLabel>
           <Input
             onChange={(e) =>
-              setFormData({ email: e.target.value, message: formData.message })
+              setEmail(e.target.value)
             }
             type="email"
             isRequired={true}
@@ -163,7 +167,7 @@ function ContactForm() {
           <FormLabel>Message</FormLabel>
           <Textarea
             onChange={(e) =>
-              setFormData({ email: formData.email, message: e.target.value })
+              setMessage(e.target.value)
             }
             height={"xs"}
             isRequired={true}
